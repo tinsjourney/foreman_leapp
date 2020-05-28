@@ -9,7 +9,7 @@ User.as_anonymous_admin do
                     'job_templates/**/*.erb')].each do |template|
         template = JobTemplate.import_raw!(File.read(template),
                                            :default => true,
-                                           :locked => true,
+                                           :lock => true,
                                            :update => true)
         template.organizations = organizations if template.present?
         template.locations = locations if template.present?
