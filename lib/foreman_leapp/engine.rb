@@ -36,6 +36,11 @@ module ForemanLeapp
                              ::Helpers::JobHelper.correct_feature?(subject, 'leapp_remediation_plan')
                          }
         end
+
+        security_block :foreman_leapp do
+          permission :view_job_invocations, { :preupgrade_reports => %i[index show job_invocation],
+                                              'api/v2/preupgrade_reports' => %i[index show job_invocation] }
+        end
       end
     end
 
