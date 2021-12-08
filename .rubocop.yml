@@ -1,7 +1,13 @@
-require:
-  - rubocop-minitest
-  - rubocop-performance
-  - rubocop-rails
+inherit_from: .rubocop_todo.yml
+
+inherit_gem:
+  theforeman-rubocop:
+    - lenient.yml
+    - minitest.yml
+
+inherit_mode:
+  merge:
+    - Exclude
 
 AllCops:
   TargetRubyVersion: 2.5
