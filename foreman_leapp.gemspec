@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.date        = Date.today.to_s
   s.authors     = ['Foreman Leapp team']
   s.email       = ['foreman-dev@googlegroups.com']
-  s.homepage    = 'https://github.com/oamg/foreman_leapp'
+  s.homepage    = 'https://github.com/theforeman/foreman_leapp'
   s.summary     = 'A Foreman plugin for Leapp utility.'
   s.description = 'A Foreman plugin to support inplace RHEL 7 -> RHEL 8 upgrades with Leapp utility.'
 
