@@ -1,121 +1,78 @@
 name: Ruby
 
 on:
-  - pull_request
-  - push
+  pull_request:
+  push:
+    branches:
+      - master
+
+env:
+  RAILS_ENV: test
+  DATABASE_URL: postgresql://postgres:@localhost/test
+  DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: true
 
 jobs:
-  test:
-
+  rubocop:
     runs-on: ubuntu-latest
-    env:
-      FOREMAN_PLUGIN_NAME: foreman_leapp
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.5
+          bundler-cache: true
+      - name: Run rubocop
+        if: github.event_name != 'push'
+        run: bundle exec rubocop --format github
 
+  test:
+    runs-on: ubuntu-latest
+    needs: rubocop
+    timeout-minutes: 30
+    env:
+      BUNDLE_WITHOUT: journald:development:console:libvirt
     services:
       postgres:
-        image: postgres:12-alpine
-        env:
-          POSTGRES_USER: foreman
-          POSTGRES_PASSWORD: foreman
-          POSTGRES_DB: foreman-test
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
+        image: postgres:12.1
+        ports: ['5432:5432']
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
+    strategy:
+      fail-fast: false
+      matrix:
+        foreman-core-branch: [develop]
+        ruby-version: [2.5, 2.7]
+        node-version: [12]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby 2.7
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version: 2.7.x
-    - name: Install bundler
-      run: gem install bundler
-    - uses: actions/cache@v1
-      with:
-        path: ~/vendor/bundle
-        key: ${{ runner.os }}-ruby-gems
-        restore-keys: |
-          ${{ runner.os }}-ruby-gems
-    - name: Clone foreman
-      run: |
-        git clone https://github.com/theforeman/foreman.git ~/foreman --depth 1
-        cd ~/foreman
-        echo -n "Foreman HEAD SHA1 hash: "
-        git show-ref HEAD | awk ' { print $1 } '
-        echo "gemspec :path => '${GITHUB_WORKSPACE}'" > bundler.d/${FOREMAN_PLUGIN_NAME}.local.rb
-        ln -s settings.yaml.test config/settings.yaml
-        cat <<EOF >config/database.yml
-        development:
-          adapter: postgresql
-          port: 5432
-          host: localhost
-          user: foreman
-          password: foreman
-          pool: 10
-          timeout: 5000
-          database: foreman-dev
-        test:
-          adapter: postgresql
-          port: 5432
-          host: localhost
-          user: foreman
-          password: foreman
-          pool: 10
-          timeout: 5000
-          database: foreman-test
-        EOF
-    - name: Install dependencies
-      run: |
-        cd ~/foreman
-        bundle config path ~/vendor/bundle
-        bundle config set without 'journald development sqlite mysql2 console journald ovirt libvirt ec2 gce openstack rackspace vmware'
-        bundle install --jobs=3 --retry=3
-    - name: Prepare the DB for tests
-      run: |
-        cd ~/foreman
-        bundle exec rake db:create
-        bundle exec rake db:migrate
-        bundle exec rake db:test:prepare
-    - name: Test with rake test:foreman_leapp
-      run: |
-        cd ~/foreman
-        bundle exec rake test:foreman_leapp
-
-  rubocop:
-
-    runs-on: ubuntu-latest
-    env:
-      FOREMAN_PLUGIN_NAME: foreman_leapp
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby 2.7
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version: 2.7.x
-    - name: Install bundler
-      run: gem install bundler
-    - uses: actions/cache@v1
-      with:
-        path: ~/vendor/bundle
-        key: ${{ runner.os }}-ruby-gems
-        restore-keys: |
-          ${{ runner.os }}-ruby-gems
-    - name: Clone foreman
-      run: |
-        git clone https://github.com/theforeman/foreman.git ~/foreman --depth 1
-        cd ~/foreman
-        echo -n "Foreman HEAD SHA1 hash: "
-        git show-ref HEAD | awk ' { print $1 } '
-        echo "gemspec :path => '${GITHUB_WORKSPACE}'" > bundler.d/${FOREMAN_PLUGIN_NAME}.local.rb
-    - name: Install dependencies
-      run: |
-        cd ~/foreman
-        bundle config path ~/vendor/bundle
-        bundle config set without 'journald development sqlite mysql2 console journald ovirt libvirt ec2 gce openstack rackspace vmware'
-        bundle install --jobs=3 --retry=3
-    - name: Run rubocop
-      run: |
-        cd ~/foreman
-        bundle exec rake foreman_leapp:rubocop
+      - run: sudo apt-get update
+      - run: sudo apt-get install build-essential libcurl4-openssl-dev zlib1g-dev libpq-dev
+      - uses: actions/checkout@v2
+        with:
+          repository: theforeman/foreman
+          ref: ${{ matrix.foreman-core-branch }}
+      - uses: actions/checkout@v2
+        with:
+          path: foreman_leapp
+      - name: Setup Bundler
+        run: |
+          echo "gem 'foreman_leapp', path: './foreman_leapp'" > bundler.d/foreman_leapp.local.rb
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: Setup Node
+        if: github.event_name != 'push'
+        uses: actions/setup-node@v1
+        with:
+          node-version:  ${{ matrix.node-version }}
+      - name: Prepare test DB
+        if: github.event_name != 'push'
+        run: |
+          bundle exec rake db:create
+          bundle exec rake db:migrate
+          bundle exec rake db:test:prepare
+      - name: Run plugin tests
+        if: github.event_name != 'push'
+        run: |
+          bundle exec rake test:foreman_leapp
+          bundle exec rake test TEST="test/unit/foreman/access_permissions_test.rb"

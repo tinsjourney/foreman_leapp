@@ -36,6 +36,11 @@ module ForemanLeapp
                              ::Helpers::JobHelper.correct_feature?(subject, 'leapp_remediation_plan')
                          }
         end
+
+        security_block :foreman_leapp do
+          permission :view_job_invocations, { :preupgrade_reports => %i[index show job_invocation],
+                                              'api/v2/preupgrade_reports' => %i[index show job_invocation] }
+        end
       end
     end
 
@@ -48,26 +53,7 @@ module ForemanLeapp
         Rails.logger.warn "ForemanLeapp: skipping engine hook (#{e})"
       end
 
-      RemoteExecutionFeature.register(
-        :leapp_preupgrade,
-        N_('Preupgrade check with Leapp'),
-        description: N_('Upgradeability check for RHEL 7 host'),
-        host_action_button: false
-      )
-
-      RemoteExecutionFeature.register(
-        :leapp_upgrade,
-        N_('Upgrade with Leapp'),
-        description: N_('Run Leapp upgrade job for RHEL 7 host'),
-        host_action_button: false
-      )
-
-      RemoteExecutionFeature.register(
-        :leapp_remediation_plan,
-        N_('Remediation plan'),
-        description: N_('Run Remediation plan with Leapp'),
-        host_action_button: false
-      )
+      ForemanLeapp::Engine.register_rex_features
     end
 
     rake_tasks do
@@ -96,6 +82,29 @@ module ForemanLeapp
 
     initializer 'foreman_leapp.apipie' do
       Apipie.configuration.checksum_path += ['/api/']
+    end
+
+    def self.register_rex_features
+      RemoteExecutionFeature.register(
+        :leapp_preupgrade,
+        N_('Preupgrade check with Leapp'),
+        description: N_('Upgradeability check for RHEL 7 host'),
+        host_action_button: false
+      )
+
+      RemoteExecutionFeature.register(
+        :leapp_upgrade,
+        N_('Upgrade with Leapp'),
+        description: N_('Run Leapp upgrade job for RHEL 7 host'),
+        host_action_button: false
+      )
+
+      RemoteExecutionFeature.register(
+        :leapp_remediation_plan,
+        N_('Remediation plan'),
+        description: N_('Run Remediation plan with Leapp'),
+        host_action_button: false
+      )
     end
   end
 end
