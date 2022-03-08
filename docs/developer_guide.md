@@ -1,56 +1,69 @@
 # Developer guide
+The `foreman_leapp` plugin enables the consumer to use a job template to upgrade Red Hat Enterprise Linux 7 hosts to Red Hat Enterprise Linux 8.
+
+**Example usage**
+
+* In the Foreman web UI, navigate to Hosts > All Hosts.
+* Select the hosts that you want to upgrade to Red Hat Enterprise Linux 8.
+* In the upper right of the Hosts window, from the Select Action list, select Preupgrade check with Leapp.
+* Click Submit to start the pre-upgrade check.
+* When the check is finished, click the Leapp preupgrade report tab to continue
+* Fix the found remediation(s) and run the upgrade job
+* For further information see the documentation links bellow
+
+## Spin up virtual machines
+Easiest way to spin up virtual machines is with the [Vagrant](https://www.vagrantup.com)  & Libvirt.
+
+**Installation (Fedora)**
+```shell
+sudo dnf install vagrant-libvirt
+sudo dnf install @vagrant
+```
+
+**Sample Vagrant file** (with [RHEL 7 box](https://app.vagrantup.com/generic/boxes/rhel7))
+```ruby
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/rhel7"
+end
+```
+
+**Spin up the RHEL 7 machine**
+```shell
+vagrant up rhel7
+```
 
 ## Leapp tool
 ### Installing on RHEL 7
 
 **Register & subscribe**
-```
+```shell
 subscription-manager register
 subscription-manager list --available --match-installed
 subscription-manager attach --pool POOL_ID
 ```
 
 **Update to the latest `7.x` version**
-```
+```shell
 yum clean all
 yum update
 reboot
 
 cat /etc/os-release
-# => RHEL is on latest version
+# => Check that RHEL is on the latest version
 ```
 
 **Install Leapp tool**
-```
+```shell
 subscription-manager repos --enable rhel-7-server-rpms
 subscription-manager repos --enable rhel-7-server-extras-rpms
 
 yum install -y leapp
 ```
-### Installing on CentOS 7
-
-!!! There is an error when running `leapp preupgrade` command on `CentOS 7`, better try it on `RHEL 7` !!!
-
-**Update to the latest `7.x` version**
-```
-yum clean all
-yum update
-reboot
-
-cat /etc/os-release
-```
-
-**Install Leapp**
-```
-yum-config-manager --add-repo https://copr.fedorainfracloud.org/coprs/g/oamg/leapp/repo/epel-7/group_oamg-leapp-epel-7.repo
-
-yum install yum-utils leapp
-```
 
 ## Leapp commands
 
 **Pre-upgrade check**
-```
+```shell
 leapp preupgrade
 
 # => /var/log/leapp/leapp-report.json (This one is parsed by foreman-leapp)
@@ -64,12 +77,13 @@ For the report sample see the file in `report_samples` folder.
 
 **Upgrade**
 
-```
+```shell
 leapp upgrade
 ```
 
 ## Resources and documentation
 
-* [Upgrading from RHEL 7 to RHEL 8](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/upgrading_from_rhel_7_to_rhel_8)
-* ~~[leapp-to.github.io/gettingstarted](https://leapp-to.github.io/gettingstarted)~~ is outdated, do not use!
+* [RHEL - Upgrading from RHEL 7 to RHEL 8](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/upgrading_from_rhel_7_to_rhel_8)
+* [Satellite - Upgrading from RHEL 7 to RHEL 8](https://access.redhat.com/documentation/en-us/red_hat_satellite/6.10/html/managing_hosts/upgrading-hosts-from-rhel7-to-rhel8_managing-hosts)
 * [Developer documentation for Leapp tool](https://leapp.readthedocs.io/en/latest/index.html)
+* ~~[leapp-to.github.io/gettingstarted](https://leapp-to.github.io/gettingstarted)~~ is outdated, do not use!
