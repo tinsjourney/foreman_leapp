@@ -1,0 +1,425 @@
+{
+  "leapp_run_id": "8920d589-fddb-4756-bf89-34da96f06c77",
+  "entries": [
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "info",
+      "tags": [
+        "repository"
+      ],
+      "timeStamp": "2022-03-04T09:13:24.110424Z",
+      "title": "Excluded RHEL 8 repositories",
+      "detail": {
+        "remediations": [
+          {
+            "type": "hint",
+            "context": "If some of excluded repositories are still required to be used during the upgrade, execute leapp with the --enablerepo option with the repoid of the repository required to be enabled as an argument (the option can be used multiple times)."
+          }
+        ]
+      },
+      "actor": "repositories_blacklist",
+      "summary": "The following repositories are not supported by Red Hat and are excluded from the list of repositories used during the upgrade.\n- codeready-builder-beta-for-rhel-8-s390x-rpms\n- rhui-codeready-builder-for-rhel-8-x86_64-rhui-rpms\n- codeready-builder-for-rhel-8-ppc64le-eus-rpms\n- codeready-builder-beta-for-rhel-8-x86_64-rpms\n- codeready-builder-for-rhel-8-aarch64-rpms\n- codeready-builder-for-rhel-8-s390x-rpms\n- codeready-builder-for-rhel-8-s390x-eus-rpms\n- codeready-builder-beta-for-rhel-8-aarch64-rpms\n- codeready-builder-for-rhel-8-rhui-rpms\n- codeready-builder-beta-for-rhel-8-ppc64le-rpms\n- codeready-builder-for-rhel-8-x86_64-rpms\n- codeready-builder-for-rhel-8-ppc64le-rpms",
+      "audience": "sysadmin",
+      "flags": [
+        "failure"
+      ],
+      "key": "a12013a95a6d305adc9f4f675186f89760af1a7e",
+      "id": "213d9d01c813094a705ea8cf4ca9d6120e320983f2adabe5cd6014a553ab44da"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "high",
+      "tags": [
+        "repository"
+      ],
+      "timeStamp": "2022-03-04T09:13:42.074290Z",
+      "title": "Packages available in excluded repositories will not be installed",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "libnsl2-devel"
+          },
+          {
+            "scheme": "package",
+            "title": "python3-pyxattr"
+          },
+          {
+            "scheme": "package",
+            "title": "rpcgen"
+          },
+          {
+            "scheme": "package",
+            "title": "rpcsvc-proto-devel"
+          }
+        ]
+      },
+      "actor": "pes_events_scanner",
+      "summary": "4 packages will be skipped because they are available only in the target RHEL major version repositories that are intentionally excluded from the list of repositories used during the upgrade. See the report message titled \"Excluded target RHEL major version repositories\" for details.\nThe list of these packages:\n- libnsl2-devel (repoid: codeready-builder-for-rhel-8-x86_64-rpms)\n- python3-pyxattr (repoid: codeready-builder-for-rhel-8-x86_64-rpms)\n- rpcgen (repoid: codeready-builder-for-rhel-8-x86_64-rpms)\n- rpcsvc-proto-devel (repoid: codeready-builder-for-rhel-8-x86_64-rpms)",
+      "audience": "sysadmin",
+      "key": "2437e204808f987477c0e9be8e4c95b3a87a9f3e",
+      "id": "ce673b268d16063a2c3f236ee5625ae6abade078b9c09eb94ec77c7595d66e5d"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "high",
+      "tags": [
+        "authentication",
+        "security",
+        "network",
+        "services"
+      ],
+      "timeStamp": "2022-03-04T09:13:43.767408Z",
+      "title": "Possible problems with remote login using root account",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "openssh-server"
+          },
+          {
+            "scheme": "file",
+            "title": "/etc/ssh/sshd_config"
+          }
+        ],
+        "remediations": [
+          {
+            "type": "hint",
+            "context": "If you depend on remote root logins using passwords, consider setting up a different user for remote administration or adding \"PermitRootLogin yes\" to sshd_config."
+          }
+        ]
+      },
+      "actor": "openssh_permit_root_login",
+      "summary": "OpenSSH configuration file does not explicitly state the option PermitRootLogin in sshd_config file, which will default in RHEL8 to \"prohibit-password\".",
+      "audience": "sysadmin",
+      "flags": [
+        "inhibitor"
+      ],
+      "key": "3d21e8cc9e1c09dc60429de7716165787e99515f",
+      "id": "f9b42cf7d87c676d43c610529e2ecfa3e9735989845f185783f664f868a73432"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "high",
+      "tags": [
+        "kernel"
+      ],
+      "timeStamp": "2022-03-04T09:13:45.471726Z",
+      "title": "Multiple devel kernels installed",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "kernel-devel"
+          }
+        ],
+        "remediations": [
+          {
+            "type": "hint",
+            "context": "Remove all but one kernel-devel packages before running Leapp again."
+          },
+          {
+            "type": "command",
+            "context": [
+              "yum",
+              "-y",
+              "remove",
+              "kernel-devel-3.10.0-1160.59.1.el7"
+            ]
+          }
+        ]
+      },
+      "actor": "check_installed_devel_kernels",
+      "summary": "DNF cannot produce a valid upgrade transaction when multiple kernel-devel packages are installed.",
+      "audience": "sysadmin",
+      "flags": [
+        "inhibitor"
+      ],
+      "key": "8ceea81afbbb1a329b7d82ca7212b21509e5b256",
+      "id": "08a4309724f8c208614dcca66553db81c23daac8911393480f92b4fc7adde1d9"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "info",
+      "tags": [
+        "authentication",
+        "security",
+        "tools"
+      ],
+      "timeStamp": "2022-03-04T09:13:45.577169Z",
+      "title": "Current PAM and nsswitch.conf configuration will be kept.",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "authselect"
+          },
+          {
+            "scheme": "package",
+            "title": "authconfig"
+          },
+          {
+            "scheme": "file",
+            "title": "/etc/nsswitch.conf"
+          }
+        ]
+      },
+      "actor": "authselect_check",
+      "summary": "There is a new tool called authselect in RHEL8 that replaced authconfig. The upgrade process was unable to find an authselect profile that would be equivalent to your current configuration. Therefore your configuration will be left intact.",
+      "audience": "sysadmin",
+      "key": "40c4ab1da4a30dc1ca40e543f6385e1336d8810c",
+      "id": "4279a2d2812cc888bd6dec68d0d93595b97483a701df62f78430b90651d63a97"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "medium",
+      "tags": [
+        "services",
+        "time management"
+      ],
+      "timeStamp": "2022-03-04T09:13:45.961828Z",
+      "title": "chrony using default configuration",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "ntpd"
+          },
+          {
+            "scheme": "package",
+            "title": "chrony"
+          },
+          {
+            "scheme": "file",
+            "title": "/etc/chrony.conf"
+          }
+        ]
+      },
+      "actor": "check_chrony",
+      "summary": "default chrony configuration in RHEL8 uses leapsectz directive, which cannot be used with leap smearing NTP servers, and uses a single pool directive instead of four server directives",
+      "audience": "sysadmin",
+      "key": "c4222ebd18730a76f6bc7b3b66df898b106e6554",
+      "id": "4c011cee6576b4f9f6cd1bd6b7af6b4d285ecbec9bda832da38a6411a82b9aff"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "low",
+      "tags": [
+        "services",
+        "email"
+      ],
+      "timeStamp": "2022-03-04T09:13:47.211356Z",
+      "title": "Postfix has incompatible changes in the next major version",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "postfix"
+          }
+        ]
+      },
+      "actor": "check_postfix",
+      "summary": "Postfix 3.x has so called \"compatibility safety net\" that runs Postfix programs with backwards-compatible default settings. It will log a warning whenever backwards-compatible default setting may be required for continuity of service. Based on this logging the system administrator can decide if any backwards-compatible settings need to be made permanent in main.cf or master.cf, before turning off the backwards-compatibility safety net.\nThe backward compatibility safety net is by default turned off in Red Hat Enterprise Linux 8.\nIt can be turned on by running:  \"postconf -e compatibility_level=0\nIt can be turned off by running: \"postconf -e compatibility_level=2\n\nIn the Postfix MySQL database client, the default \"option_group\" value has changed to \"client\", i.e. it now reads options from the [client] group from the MySQL configuration file. To disable it, set \"option_group\" to the empty string.\n\nThe postqueue command no longer forces all message arrival times to be reported in UTC. To get the old behavior, set TZ=UTC in main.cf:import_environment.\n\nPostfix 3.2 enables elliptic curve negotiation. This changes the default smtpd_tls_eecdh_grade setting to \"auto\", and introduces a new parameter \"tls_eecdh_auto_curves\" with the names of curves that may be negotiated.\n\nThe \"master.cf\" chroot default value has changed from \"y\" (yes) to \"n\" (no). This applies to master.cf services where chroot field is not explicitly specified.\n\nThe \"append_dot_mydomain\" default value has changed from \"yes\" to \"no\". You may need changing it to \"yes\" if senders cannot use complete domain names in e-mail addresses.\n\nThe \"relay_domains\" default value has changed from \"$mydestination\" to the empty value. This could result in unexpected \"Relay access denied\" errors or ETRN errors, because now will postfix by default relay only for the localhost.\n\nThe \"mynetworks_style\" default value has changed from \"subnet\" to \"host\". This parameter is used to implement the \"permit_mynetworks\" feature. The change could result in unexpected \"access denied\" errors, because postfix will now by default trust only the local machine, not the remote SMTP clients on the same IP subnetwork.\n\nPostfix now supports dynamically loaded database plugins. Plugins are shipped in individual RPM sub-packages. Correct database plugins have to be installed, otherwise the specific database client will not work. For example for PostgreSQL map to work, the postfix-pgsql RPM package has to be installed.\n",
+      "audience": "sysadmin",
+      "key": "5721e0a07a67d82cf7e5ea6f17662cd4f82e0a33",
+      "id": "b426d7bd0e620575487986e3e99bd2fedbccf8bebe608fc34ec55aa0827b9d07"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "info",
+      "title": "SElinux relabeling has been scheduled",
+      "timeStamp": "2022-03-04T09:13:47.321350Z",
+      "tags": [
+        "selinux",
+        "security"
+      ],
+      "actor": "check_se_linux",
+      "summary": "SElinux relabeling has been scheduled as the status was permissive/enforcing.",
+      "audience": "sysadmin",
+      "key": "c12a05a22be0b5bc0af3f1119898ea6d8639d9c4",
+      "id": "fba84e2c26e8f4ecdf732425247d4dd00dc6285c710305730859de35f0ec4894"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "low",
+      "title": "SElinux will be set to permissive mode",
+      "timeStamp": "2022-03-04T09:13:47.349517Z",
+      "tags": [
+        "selinux",
+        "security"
+      ],
+      "actor": "check_se_linux",
+      "summary": "SElinux will be set to permissive mode. Current mode: enforcing. This action is required by the upgrade process",
+      "audience": "sysadmin",
+      "key": "39d7183dafba798aa4bbb1e70b0ef2bbe5b1772f",
+      "id": "e460c4c1b77f183d60673588e3f6328d126e3871cb8708ab8a312659ddf6f7d7"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "high",
+      "title": "Packages not signed by Red Hat found on the system",
+      "timeStamp": "2022-03-04T09:13:47.730936Z",
+      "tags": [
+        "sanity"
+      ],
+      "actor": "red_hat_signed_rpm_check",
+      "summary": "The following packages have not been signed by Red Hat and may be removed during the upgrade process in case Red Hat-signed packages to be removed during the upgrade depend on them:\n- epel-release\n- gpg-pubkey\n- haveged\n- jwhois\n- libidn2",
+      "audience": "sysadmin",
+      "key": "13f0791ae5f19f50e7d0d606fb6501f91b1efb2c",
+      "id": "b60fcdd5b3d62beb7827841c581fc7747efde8a6d7f8343eb7ea4336138284b5"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "low",
+      "tags": [
+        "tools"
+      ],
+      "timeStamp": "2022-03-04T09:13:48.717630Z",
+      "title": "Grep has incompatible changes in the next major version",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "grep"
+          }
+        ],
+        "remediations": [
+          {
+            "type": "hint",
+            "context": "Please update your scripts to be compatible with the changes."
+          }
+        ]
+      },
+      "actor": "checkgrep",
+      "summary": "If a file contains data improperly encoded for the current locale, and this is discovered before any of the file's contents are output, grep now treats the file as binary.\nThe 'grep -P' no longer reports an error and exits when given invalid UTF-8 data. Instead, it considers the data to be non-matching.\nIn locales with multibyte character encodings other than UTF-8, grep -P now reports an error and exits instead of misbehaving.\nWhen searching binary data, grep now may treat non-text bytes as line terminators. This can boost performance significantly.\nThe 'grep -z' no longer automatically treats the byte '\\200' as binary data.\nContext no longer excludes selected lines omitted because of -m. For example, 'grep \"^\" -m1 -A1' now outputs the first two input lines, not just the first line.\n",
+      "audience": "sysadmin",
+      "key": "94665a499e2eeee35eca3e7093a7abe183384b16",
+      "id": "bb2bb344bbee1d147b61dd44dcd90ffc88a9c7548d7d97fb26b3087517298500"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "high",
+      "tags": [
+        "kernel",
+        "drivers"
+      ],
+      "timeStamp": "2022-03-04T09:13:49.270501Z",
+      "title": "Detected loaded kernel drivers which have been removed in RHEL 8. Upgrade cannot proceed.",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "kernel-driver",
+            "title": "pata_acpi"
+          }
+        ],
+        "remediations": [
+          {
+            "type": "hint",
+            "context": "Please disable detected kernel drivers in order to proceed with the upgrade process using the rmmod or modprobe -r."
+          }
+        ]
+      },
+      "actor": "check_kernel_drivers",
+      "summary": "Support for the following RHEL 7 device drivers has been removed in RHEL 8: \n     - pata_acpi\nPlease see https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/considerations_in_adopting_rhel_8/index#removed-device-drivers_hardware-enablement for details.",
+      "audience": "sysadmin",
+      "flags": [
+        "inhibitor"
+      ],
+      "key": "b6fd580136aaf67fa42d68fb75b27f6e13f47c2d",
+      "id": "21356672f78a40f2c0bec067af58a1f0b12b5f96967e5d0d3bd337ee1bb680a9"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "high",
+      "title": "GRUB core will be updated during upgrade",
+      "timeStamp": "2022-03-04T09:13:49.592552Z",
+      "tags": [
+        "boot"
+      ],
+      "actor": "check_grub_core",
+      "summary": "On legacy (BIOS) systems, GRUB core (located in the gap between the MBR and the first partition) does not get automatically updated when GRUB is upgraded.",
+      "audience": "sysadmin",
+      "key": "baa75fad370c42fd037481909201cde9495dacf4",
+      "id": "0b4856668c9601d60b59169895b81f6f71fa640e2a7fa942b228baa283c4bd73"
+    },
+    {
+      "hostname": "rhel7.example.com",
+      "severity": "high",
+      "tags": [
+        "python"
+      ],
+      "timeStamp": "2022-03-04T09:13:49.660910Z",
+      "title": "Difference in Python versions and support in RHEL 8",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "package",
+            "title": "python"
+          },
+          {
+            "scheme": "package",
+            "title": "python2"
+          },
+          {
+            "scheme": "package",
+            "title": "python3"
+          }
+        ],
+        "external": [
+          {
+            "url": "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/configuring_basic_system_settings/#using-python3",
+            "title": "Difference in Python versions and support in RHEL 8"
+          }
+        ],
+        "remediations": [
+          {
+            "type": "hint",
+            "context": "Please run \"alternatives --set python /usr/bin/python3\" after upgrade"
+          }
+        ]
+      },
+      "actor": "python_inform_user",
+      "summary": "In RHEL 8, there is no 'python' command. Python 3 (backward incompatible) is the primary Python version and Python 2 is available with limited support and limited set of packages. Read more here: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/configuring_basic_system_settings/#using-python3",
+      "audience": "developer",
+      "key": "0c98585b1d8d252eb540bf61560094f3495351f5",
+      "id": "ce1c7dc7298216b0560a8023f6825cad473ce991d95d1983a75aff7010b6edc5"
+    },
+    {
+      "severity": "high",
+      "title": "Missing required answers in the answer file",
+      "timeStamp": "2022-03-04T09:13:50.114479Z",
+      "hostname": "rhel7.example.com",
+      "detail": {
+        "related_resources": [
+          {
+            "scheme": "dialog",
+            "title": "remove_pam_pkcs11_module_check.confirm"
+          }
+        ],
+        "remediations": [
+          {
+            "type": "hint",
+            "context": "Please register user choices with leapp answer cli command or by manually editing the answerfile."
+          },
+          {
+            "type": "command",
+            "context": [
+              "leapp",
+              "answer",
+              "--section",
+              "remove_pam_pkcs11_module_check.confirm=True"
+            ]
+          }
+        ]
+      },
+      "actor": "verify_check_results",
+      "summary": "One or more sections in answerfile are missing user choices: remove_pam_pkcs11_module_check.confirm\nFor more information consult https://leapp.readthedocs.io/en/latest/dialogs.html",
+      "audience": "sysadmin",
+      "flags": [
+        "inhibitor"
+      ],
+      "key": "d35f6c6b1b1fa6924ef442e3670d90fa92f0d54b",
+      "id": "81d1ad25bae1cf2707bbfbc81c1c1e1f28d33693ab6b94adc55a7b29321cd311"
+    }
+  ]
+}
