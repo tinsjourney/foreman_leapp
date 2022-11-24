@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the foreman_leapp package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+# Translators:
+# NorwayFun <temuri.doghonadze@gmail.com>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: foreman_leapp 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2022-10-12 12:00+0000\n"
+"Last-Translator: NorwayFun <temuri.doghonadze@gmail.com>, 2022\n"
+"Language-Team: Georgian (https://www.transifex.com/foreman/teams/114/ka/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ka\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "A Foreman plugin to support inplace RHEL upgrades with Leapp utility."
+msgstr ""
+
+msgid "Action with sub plans"
+msgstr ""
+
+msgid "All"
+msgstr "ყველა"
+
+msgid "Command"
+msgstr "ბრძანება"
+
+msgid "Fix Selected"
+msgstr "არჩეული გასწორება"
+
+msgid "Fix Type"
+msgstr "გასწორების ტიპი"
+
+msgid "Has Remediation?"
+msgstr "აქვს გაუქმება?"
+
+msgid "High"
+msgstr "მაღალი"
+
+msgid "Hint"
+msgstr "მინიშნება"
+
+msgid "Host"
+msgstr "ჰოსტი"
+
+msgid "Import Puppet classes"
+msgstr ""
+
+msgid "Import facts"
+msgstr ""
+
+msgid "Info"
+msgstr "ინფორმაცია"
+
+msgid "Inhibitor"
+msgstr "ინჰიბიტორი"
+
+msgid "Inhibitor?"
+msgstr "ინჰიბიტორი?"
+
+msgid "Leapp preupgrade report"
+msgstr "Leapp-ის განახლებისწინა ანგარიში"
+
+msgid "List Preupgrade reports"
+msgstr "განახლებისწინა ანგარიშების სია"
+
+msgid "List Preupgrade reports for Job invocation"
+msgstr "განახლებისწინა ანგარიშების სია დავალების ჩასაწოდებლად"
+
+msgid "Low"
+msgstr "დაბალი"
+
+msgid "Medium"
+msgstr "საშუალო"
+
+msgid "Missing one of the required permissions: view_hosts"
+msgstr "აკლია ერთ-ერთი საჭირო ნებართვა: view_hosts"
+
+msgid "No"
+msgstr "არა"
+
+msgid "No Preupgrade Report Available"
+msgstr "განახლებისწინა ანგარიში ხელმისაწვდომი არაა"
+
+msgid "Preupgrade check with Leapp"
+msgstr "განახლებისწინა შემოწმება Leapp-ით"
+
+msgid "Preupgrade job"
+msgstr ""
+
+msgid "Remediation plan"
+msgstr "გაუქმების გეგმა"
+
+msgid "Remote action:"
+msgstr ""
+
+msgid "Risk Factor"
+msgstr "რისკის ფაქტორი"
+
+msgid "Run Leapp upgrade job for RHEL host"
+msgstr ""
+
+msgid "Run Remediation plan with Leapp"
+msgstr "გაუქმების გეგმის Leapp-ით გაშვება"
+
+msgid "Run Upgrade"
+msgstr "განახლების გაშვება"
+
+msgid "Show Preupgrade report"
+msgstr "განახლებისწინა ანგარიშის ჩვენება"
+
+msgid "The preupgrade report could not be generated, check the job details for the reason"
+msgstr ""
+
+msgid "The preupgrade report will be available after the job finishes"
+msgstr "განახლებისწინა ანგარიში დავალების დასრულების შემდეგ იქნება ხელმისაწვდომი"
+
+msgid "This issue inhibits the upgrade."
+msgstr "ეს პრობლემა აჩერებს განახლებას."
+
+msgid "Title"
+msgstr "სათაური"
+
+msgid "Upgrade with Leapp"
+msgstr "Leapp-ით განახლება"
+
+msgid "Upgradeability check for RHEL host"
+msgstr ""
+
+msgid "Yes"
+msgstr "დიახ"
